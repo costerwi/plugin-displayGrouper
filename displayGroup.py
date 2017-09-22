@@ -12,6 +12,7 @@ def addAdjacent():
     odb = session.odbs[vp.odbDisplay.name]
 
     activeNodes = vp.getActiveNodeLabels(printResults=False)
+    nActiveElements = len(vp.getActiveElementLabels(printResults=False))
     nElements = 0 # Count number of elements added
 
     # TODO: Check for odb.rootAssembly elements
@@ -37,7 +38,7 @@ def addAdjacent():
                 (instName, elements), )))
         nElements += len(elements)
 
-    milestone('Added {} elements.'.format(nElements))
+    print('Added {} adjacent elements.'.format(nElements - nActiveElements))
 
 if "__main__" == __name__:
     addAdjacent()
