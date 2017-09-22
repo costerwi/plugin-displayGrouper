@@ -12,10 +12,10 @@ toolset = getAFXApp().getAFXMainWindow().getPluginToolset()
 
 toolset.registerKernelMenuButton(
         moduleName='displayGroup',
-        functionName='addAttached()',
-        buttonText='Display Group|&Add Attached',
+        functionName='addAdjacent()',
+        buttonText='Display Group|&Add Adjacent',
         author='Carl Osterwisch',
-        description='Add elements attached to active nodes.',
+        description='Add elements that are attached to active nodes.',
         version=str(__VERSION__),
         applicableModules=['Mesh', 'Visualization'],
     )

@@ -7,7 +7,7 @@ from __future__ import print_function
 from abaqus import session, milestone
 import displayGroupOdbToolset as dgo
 
-def addAttached():
+def addAdjacent():
     vp = session.viewports[session.currentViewportName]
     odb = session.odbs[vp.odbDisplay.name]
 
@@ -40,4 +40,4 @@ def addAttached():
     milestone('Added {} elements.'.format(nElements))
 
 if "__main__" == __name__:
-    addAttached()
+    addAdjacent()
