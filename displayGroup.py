@@ -33,6 +33,10 @@ def addAdjacent():
                 if node in nodeSet:
                     elements.append(element.label)
                     break
+        milestone(message='Checking {}'.format(instName),
+                object='Elements',
+                done=N,
+                total=N)
         vp.odbDisplay.displayGroup.add(
             leaf=dgo.LeafFromModelElemLabels(elementLabels=(
                 (instName, elements), )))
