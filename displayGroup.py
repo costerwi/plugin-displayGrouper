@@ -4,6 +4,7 @@ Carl Osterwisch, September 2017
 """
 
 from __future__ import print_function
+from time import time
 from abaqus import session, milestone
 import displayGroupOdbToolset as dgo
 
@@ -23,20 +24,16 @@ def addAdjacent():
         nodeSet = set(nodeLabels)
         elements = []
         N = len(inst.elements)
+        statusUpdate = 0
         for n, element in enumerate(inst.elements):
-            if 0 == n%10000:
+            if time() > statusUpdate:
+                statusUpdate = time() + 2.5 # update every 2.5 seconds
                 milestone(message='Checking {}'.format(instName),
-                        object='Elements',
-                        done=n,
-                        total=N)
+                        percent=100*n/N)
             for node in element.connectivity:
                 if node in nodeSet:
                     elements.append(element.label)
                     break
-        milestone(message='Checking {}'.format(instName),
-                object='Elements',
-                done=N,
-                total=N)
         vp.odbDisplay.displayGroup.add(
             leaf=dgo.LeafFromModelElemLabels(elementLabels=(
                 (instName, elements), )))
