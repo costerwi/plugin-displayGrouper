@@ -37,6 +37,9 @@ def addAdjacent():
         vp.odbDisplay.displayGroup.add(
             leaf=dgo.LeafFromModelElemLabels(elementLabels=(
                 (instName, elements), )))
+        vp.odbDisplay.displayGroup.add(
+            leaf=dgo.LeafFromModelNodeLabels(nodeLabels=(
+                (instName, nodeLabels), )))
         nElements += len(elements)
 
     print('Added {} adjacent elements.'.format(nElements - nActiveElements))
