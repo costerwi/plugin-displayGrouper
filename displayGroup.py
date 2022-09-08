@@ -33,10 +33,8 @@ def addAdjacent():
                         percent=n/N)
             if element.label in elemSet:
                 continue # already displayed
-            for node in element.connectivity:
-                if node in nodeSet:
-                    elements.append(element.label)
-                    break
+            if not nodeSet.isdisjoint(element.connectivity):
+                elements.append(element.label)
         vp.odbDisplay.displayGroup.add(
             leaf=dgo.LeafFromModelElemLabels(elementLabels=(
                 (instName, elements), )))
