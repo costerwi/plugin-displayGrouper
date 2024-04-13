@@ -5,7 +5,7 @@ Latest version: https://github.com/costerwi/plugin-displayGrouper
 Carl Osterwisch, September 2017
 """
 
-__version__ = "0.2.0"
+__version__ = "1.0.0"
 
 from abaqusGui import *
 
