@@ -137,7 +137,7 @@ def addNearby(r=None):
         return
 
     activeNodes = vp.getActiveNodeLabels(printResults=False)
-    n = sum( [len(nodeLabels) for nodeLabels in aciveNodes.values()] )
+    n = sum( [len(nodeLabels) for nodeLabels in activeNodes.values()] )
     if n > 5000:
         reply = getWarningReply('Search may take a long time with {} active nodes.\n'
             'Okay to continue?'.format(n), (YES, NO))
