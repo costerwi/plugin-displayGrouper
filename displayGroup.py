@@ -19,7 +19,7 @@ def addAdjacent():
 
     activeNodes = vp.getActiveNodeLabels(printResults=False)
     activeElements = vp.getActiveElementLabels(printResults=False)
-    nElements = 0 # Count number of elements added
+    adjacentElements = [] # elements adjacent to activeElements to add to display group
 
     # TODO: Check for odb.rootAssembly elements
     # TODO: Check for odb.rootAssembly.rigidBodies
@@ -39,15 +39,14 @@ def addAdjacent():
                 continue # already displayed
             if not nodeSet.isdisjoint(element.connectivity):
                 elements.append(element.label)
-        vp.odbDisplay.displayGroup.add(
-            leaf=dgo.LeafFromModelElemLabels(elementLabels=(
-                (instName, elements), )))
-        vp.odbDisplay.displayGroup.add(
-            leaf=dgo.LeafFromModelNodeLabels(nodeLabels=(
-                (instName, nodeLabels), )))
-        nElements += len(elements)
+        if elements:
+            adjacentElements.append([instName, elements])
+    if adjacentElements:
+        leaf=dgo.LeafFromModelElemLabels(elementLabels=adjacentElements)
+        vp.odbDisplay.displayGroup.add(leaf=leaf)
+    print('Added {} adjacent elements.'.format(
+        reduce(lambda a, b: a + len(b[1]), adjacentElements, 0)))
 
-    print('Added {} adjacent elements.'.format(nElements))
 
 if "__main__" == __name__:
     addAdjacent()
