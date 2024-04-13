@@ -145,7 +145,7 @@ class RemoveSectionPicked(ElementSelectProcedure):
     pass
 
 toolset.registerGuiMenuButton(
-        buttonText='Display Grouper|Remove picked &section assignment',
+        buttonText='Display Grouper|Remove elements with picked &section assignment',
         object=RemoveSectionPicked(toolset, 'section to remove', 'removeSection', ONE),
         kernelInitString='import displayGrouper',
         author='Carl Osterwisch',
