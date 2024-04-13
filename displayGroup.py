@@ -5,12 +5,17 @@ Carl Osterwisch, September 2017
 
 from __future__ import print_function
 from time import time
-from abaqus import session, milestone
+from abaqus import session, milestone, getInput, getWarningReply, CANCEL
 import displayGroupOdbToolset as dgo
+from functools import reduce
 
 def addAdjacent():
+    "Add elements touching displayed elements"
     vp = session.viewports[session.currentViewportName]
-    odb = session.odbs[vp.odbDisplay.name]
+    odb = vp.displayedObject
+    if not hasattr(odb, 'rootAssembly'):
+        getWarningReply('Must have odb displayed in viewport', (CANCEL,))
+        return
 
     activeNodes = vp.getActiveNodeLabels(printResults=False)
     activeElements = vp.getActiveElementLabels(printResults=False)
