@@ -1,13 +1,14 @@
-"""displayGroup.py - Abaqus CAE functions to modify displayed elements
+""" Abaqus CAE functions to modify displayed elements
+
+Latest version: https://github.com/costerwi/plugin-displayGrouper
 
 Carl Osterwisch, September 2017
 """
 
 from __future__ import print_function
 from time import time
-from abaqus import session, milestone, getInput, getWarningReply, CANCEL
+from abaqus import session, milestone, getInput, getWarningReply, YES, NO, CANCEL
 import displayGroupOdbToolset as dgo
-from functools import reduce
 import os
 
 DEBUG = os.environ.get('DEBUG')
@@ -48,7 +49,7 @@ def addAdjacent():
         leaf=dgo.LeafFromModelElemLabels(elementLabels=adjacentElements)
         vp.odbDisplay.displayGroup.add(leaf=leaf)
     print('Added {} adjacent elements.'.format(
-        reduce(lambda a, b: a + len(b[1]), adjacentElements, 0)))
+        sum( [len(elementLabels) for instName, elementLabels in adjacentElements] )))
 
 
 def addAttached():
@@ -121,7 +122,8 @@ def addIncompleteSections():
 
 
 def addNearby(r=None):
-    "Add elements with nodes close to active nodes"
+    "Add elements with undeformed nodes close to active undeformed nodes"
+    # TODO: consider deformation
     import numpy as np
     try:
         from scipy.spatial import KDTree
@@ -134,13 +136,20 @@ def addNearby(r=None):
         getWarningReply('Must have odb displayed in viewport', (CANCEL,))
         return
 
+    activeNodes = vp.getActiveNodeLabels(printResults=False)
+    n = sum( [len(nodeLabels) for nodeLabels in aciveNodes.values()] )
+    if n > 5000:
+        reply = getWarningReply('Search may take a long time with {} active nodes.\n'
+            'Okay to continue?'.format(n), (YES, NO))
+        if NO == reply:
+            return
+
     if r is None:
-        r = getInput('Enter search radius:', '5')
+        r = getInput('Enter search radius:', '2')
         if r is None:  # cancelled
             return
         r = float(r)
 
-    activeNodes = vp.getActiveNodeLabels(printResults=False)
     activePoints = []
     t0 = time()
     if DEBUG: print(time() - t0, 'Collect active points')
@@ -182,7 +191,7 @@ def addNearby(r=None):
         vp.odbDisplay.displayGroup.add(leaf=leaf)
     if DEBUG: print(time() - t0, 'Done')
     print('Added {} nearby elements.'.format(
-        reduce(lambda a, b: a + len(b[1]), nearbyElements, 0)))
+        sum( [len(elementLabels) for instName, elementLabels in nearbyElements] )))
 
 
 def createFromSections():
@@ -249,9 +258,8 @@ def removeElements(elements):
     instElements = {}
     for element in elements:  # group elements by instanceName
         instElements.setdefault(element.instanceName, []).append(element.label)
-    for instanceName, elementLabels in instElements.items():
-        leaf = dgo.LeafFromElementLabels(instanceName, elementLabels)
-        vp.odbDisplay.displayGroup.remove(leaf=leaf)
+    leaf=dgo.LeafFromModelElemLabels(elementLabels=list(instElements.items()))
+    vp.odbDisplay.displayGroup.remove(leaf=leaf)
 
 
 def removeSection(element):

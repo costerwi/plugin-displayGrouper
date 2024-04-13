@@ -1,5 +1,7 @@
 """Abaqus/CAE plugins to modify the display group.
 
+Latest version: https://github.com/costerwi/plugin-displayGrouper
+
 Carl Osterwisch, September 2017
 """
 
@@ -19,7 +21,7 @@ class ElementSelectProcedure(AFXProcedure):
         # Command
         command = AFXGuiCommand(mode=self,
                 method=method,
-                objectName='displayGroup',
+                objectName='displayGrouper',
                 registerQuery=FALSE)
 
         # Keywords
@@ -51,68 +53,74 @@ class ElementSelectProcedure(AFXProcedure):
 toolset = getAFXApp().getAFXMainWindow().getPluginToolset()
 
 toolset.registerKernelMenuButton(
-        moduleName='displayGroup',
+        moduleName='displayGrouper',
         functionName='addAdjacent()',
-        buttonText='Display Group|Add ad&jacent elements',
+        buttonText='Display Grouper|Add ad&jacent elements',
         author='Carl Osterwisch',
         description='Add elements that are attached to active nodes.',
         version=__version__,
         applicableModules=['Visualization'],
+        helpUrl='https://github.com/costerwi/plugin-displayGrouper',
     )
 
 
 toolset.registerKernelMenuButton(
-        moduleName='displayGroup',
+        moduleName='displayGrouper',
         functionName='addAttached()',
-        buttonText='Display Group|Add a&ttached elements',
+        buttonText='Display Grouper|Add a&ttached elements',
         author='Carl Osterwisch',
         description='Add elements that are attached to active elements.',
         version=__version__,
         applicableModules=['Visualization'],
+        helpUrl='https://github.com/costerwi/plugin-displayGrouper',
     )
 
 
 toolset.registerKernelMenuButton(
-        moduleName='displayGroup',
+        moduleName='displayGrouper',
         functionName='addNearby()',
-        buttonText='Display Group|Add &nearby elements...',
+        buttonText='Display Grouper|Add &nearby elements...',
         author='Carl Osterwisch',
-        description='Add elements with nodes close to active nodes.',
+        description='Add elements with undeformed nodes close to active undeformed nodes.',
         version=__version__,
         applicableModules=['Visualization'],
+        helpUrl='https://github.com/costerwi/plugin-displayGrouper',
     )
 
 
 toolset.registerKernelMenuButton(
-        moduleName='displayGroup',
+        moduleName='displayGrouper',
         functionName='addIncompleteSections()',
-        buttonText='Display Group|Add &same section elements',
+        buttonText='Display Grouper|Add &same section assignment elements',
         author='Carl Osterwisch',
         description='Add elements with same section assignment as active elements.',
         version=__version__,
         applicableModules=['Visualization'],
+        helpUrl='https://github.com/costerwi/plugin-displayGrouper',
     )
 
 
 toolset.registerKernelMenuButton(
-        moduleName='displayGroup',
+        moduleName='displayGrouper',
         functionName='createFromSections()',
-        buttonText='Display Group|Create &named from section assignments',
+        buttonText='Display Grouper|Create &named from section assignments',
         author='Carl Osterwisch',
         description='Create a named display group for each section definition.',
         version=__version__,
         applicableModules=['Visualization'],
+        helpUrl='https://github.com/costerwi/plugin-displayGrouper',
     )
 
 
 toolset.registerKernelMenuButton(
-        moduleName='displayGroup',
+        moduleName='displayGrouper',
         functionName='listActiveSections()',
-        buttonText='Display Group|&List active sections',
+        buttonText='Display Grouper|&List section assignments of active elements',
         author='Carl Osterwisch',
         description='List sections for displayed elements.',
         version=__version__,
         applicableModules=['Visualization'],
+        helpUrl='https://github.com/costerwi/plugin-displayGrouper',
     )
 
 
@@ -121,12 +129,12 @@ class RemoveElementsPicked(ElementSelectProcedure):
     pass
 
 toolset.registerGuiMenuButton(
-        buttonText='Display Group|Remove picked &elements',
+        buttonText='Display Grouper|Remove picked &elements',
         object=RemoveElementsPicked(toolset, 'elements to remove', 'removeElements', MANY),
-        kernelInitString='import displayGroup',
+        kernelInitString='import displayGrouper',
         author='Carl Osterwisch',
         version=__version__,
-        helpUrl='https://github.com/costerwi',
+        helpUrl='https://github.com/costerwi/plugin-displayGrouper',
         applicableModules=['Visualization', ],
         description='Hide elements selected in viewport and repeat.'
     )
@@ -137,12 +145,12 @@ class RemoveSectionPicked(ElementSelectProcedure):
     pass
 
 toolset.registerGuiMenuButton(
-        buttonText='Display Group|Remove picked &section assignment',
+        buttonText='Display Grouper|Remove picked &section assignment',
         object=RemoveSectionPicked(toolset, 'section to remove', 'removeSection', ONE),
-        kernelInitString='import displayGroup',
+        kernelInitString='import displayGrouper',
         author='Carl Osterwisch',
         version=__version__,
-        helpUrl='https://github.com/costerwi',
+        helpUrl='https://github.com/costerwi/plugin-displayGrouper',
         applicableModules=['Visualization', ],
         description='Hide all elements of the selected section and repeat.'
     )
