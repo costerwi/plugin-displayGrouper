@@ -29,13 +29,12 @@ def addAdjacent():
         nodeSet = set(nodeLabels)
         elemSet = set(activeElements.get(instName, [])) # active intance elements
         elements = []
-        N = max(1, len(inst.elements)/100)
-        progressUpdate = 0
-        for n, element in enumerate(inst.elements):
-            if 0 == n%200 and time() > progressUpdate:
-                progressUpdate = time() + 2.5 # update every 2.5 seconds
+        progressTime = 0
+        for eIndex, element in enumerate(inst.elements):
+            if 0 == eIndex%1000 and time() > progressTime:
+                progressTime = time() + 2.5 # update every 2.5 seconds
                 milestone(message='Checking {}'.format(instName),
-                        percent=n/N)
+                        object='element', done=eIndex, total=len(inst.elements))
             if element.label in elemSet:
                 continue # already displayed
             if not nodeSet.isdisjoint(element.connectivity):
