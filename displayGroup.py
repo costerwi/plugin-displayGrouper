@@ -48,5 +48,3 @@ def addAdjacent():
         reduce(lambda a, b: a + len(b[1]), adjacentElements, 0)))
 
 
-if "__main__" == __name__:
-    addAdjacent()
