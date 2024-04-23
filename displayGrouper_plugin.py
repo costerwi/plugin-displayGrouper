@@ -33,6 +33,7 @@ class ElementSelectProcedure(AFXProcedure):
                 name=name,
                 isRequired=TRUE)
 
+    def getFirstStep(self):
         self.step1 = AFXPickStep(
                 owner=self,
                 keyword=self.elementsKw,
@@ -41,7 +42,6 @@ class ElementSelectProcedure(AFXProcedure):
                 numberToPick=self._number,
                 sequenceStyle=TUPLE)    # TUPLE or ARRAY
 
-    def getFirstStep(self):
         return self.step1
 
     def getLoopStep(self):
