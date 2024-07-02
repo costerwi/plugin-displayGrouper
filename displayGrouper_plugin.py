@@ -5,43 +5,42 @@ Latest version: https://github.com/costerwi/plugin-displayGrouper
 Carl Osterwisch, September 2017
 """
 
-__version__ = "1.0.1"
+__version__ = "1.0.3"
 
 from abaqusGui import *
 
 
 class ElementSelectProcedure(AFXProcedure):
-    """Class to allow user to select elements and run an assemblyMod command"""
+    """Base class prompting user to select elements and run a command"""
+    prompt = 'elements to operate upon' # must be defined by child class
+    method = 'thing_to_do' # must be defined by child class
 
-    def __init__(self, owner, prompt, method, number=MANY):
+    def __init__(self, owner):
         AFXProcedure.__init__(self, owner) # Construct the base class.
-        self._prompt = prompt
-        self._number = number
 
-        # Command
         command = AFXGuiCommand(mode=self,
-                method=method,
+                method=self.method,
                 objectName='displayGrouper',
                 registerQuery=FALSE)
 
-        # Keywords
-        name = 'element'
-        if MANY == number:
-            name += 's'
+        objectToPick = self.prompt.split()[0]
+        if objectToPick.endswith('s'): # plural
+            self.numberToPick = MANY
+        else:
+            self.numberToPick = ONE
         self.elementsKw = AFXObjectKeyword(
                 command=command,
-                name=name,
+                name=objectToPick,
                 isRequired=TRUE)
 
     def getFirstStep(self):
         self.step1 = AFXPickStep(
                 owner=self,
                 keyword=self.elementsKw,
-                prompt='Select ' + self._prompt,
+                prompt='Select ' + self.prompt,
                 entitiesToPick=ELEMENTS,
-                numberToPick=self._number,
+                numberToPick=self.numberToPick,
                 sequenceStyle=TUPLE)    # TUPLE or ARRAY
-
         return self.step1
 
     def getLoopStep(self):
@@ -125,12 +124,13 @@ toolset.registerKernelMenuButton(
 
 
 class RemoveElementsPicked(ElementSelectProcedure):
-    """CAE seems to register this class with the GuiMenuButton, not the instance of the class"""
-    pass
+        """CAE seems to register this class with the GuiMenuButton, not the instance of the class"""
+        prompt = 'elements to remove'
+        method = 'removeElements'
 
 toolset.registerGuiMenuButton(
         buttonText='Display Grouper|Remove picked &elements',
-        object=RemoveElementsPicked(toolset, 'elements to remove', 'removeElements', MANY),
+        object=RemoveElementsPicked(toolset),
         kernelInitString='import displayGrouper',
         author='Carl Osterwisch',
         version=__version__,
@@ -141,12 +141,13 @@ toolset.registerGuiMenuButton(
 
 
 class RemoveSectionPicked(ElementSelectProcedure):
-    """CAE seems to register this class with the GuiMenuButton, not the instance of the class"""
-    pass
+        """CAE seems to register this class with the GuiMenuButton, not the instance of the class"""
+        prompt = 'element of section to remove'
+        method = 'removeSection'
 
 toolset.registerGuiMenuButton(
         buttonText='Display Grouper|Remove elements with picked &section assignment',
-        object=RemoveSectionPicked(toolset, 'section to remove', 'removeSection', ONE),
+        object=RemoveSectionPicked(toolset),
         kernelInitString='import displayGrouper',
         author='Carl Osterwisch',
         version=__version__,
